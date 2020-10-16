@@ -18,10 +18,12 @@ import com.hrishikeshdarshan.fetchdogsjavamvvm.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ListFragment extends Fragment {
+import static com.hrishikeshdarshan.fetchdogsjavamvvm.view.ListFragmentDirections.*;
 
-    @BindView(R.id.floatingActionButton)
-    FloatingActionButton fab;
+public class ListFragment extends Fragment {
+//
+//    @BindView(R.id.floatingActionButton)
+//    FloatingActionButton fab;
 
     public ListFragment() {
         // Required empty public constructor
@@ -36,21 +38,20 @@ public class ListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        fab.setOnClickListener(view1 -> {
-            onGoToDeatils();
-        });
+//   det
 
-    }
-
-    void onGoToDeatils(){
-
-        NavDirections action = ListFragmentDirections.actionDetail();
-        Navigation.findNavController(fab).navigate(action);
-
-
-    }
+//    void onGoToDeatils(){
+////
+////        ListFragmentDirections.ActionDetail action = ListFragmentDirections.actionDetail();
+//
+//
+//        ActionDetail action = actionDetail();
+//        action.setDogUuid(5);
+//
+//
+//        Navigation.findNavController(fab).navigate(action);
+//
+//
+//    }
 
 }
