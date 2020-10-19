@@ -5,16 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.R;
+import com.hrishikeshdarshan.fetchdogsjavamvvm.viewmodel.DetailViewModel;
 
 
 import butterknife.BindView;
@@ -23,6 +22,17 @@ import butterknife.ButterKnife;
 public class DetailFragment extends Fragment {
 
     private int dogUuid;
+    DetailViewModel viewModel;
+
+    @BindView(R.id.dogName)
+    TextView dogName;
+    @BindView(R.id.dogPurpose)
+    TextView dogPurpose;
+    @BindView(R.id.dogTemperament)
+    TextView dogTemperament;
+    @BindView(R.id.dogLifeSpan)
+    TextView dogLifeSpan;
+
 
 
     public DetailFragment() {
@@ -44,5 +54,24 @@ public class DetailFragment extends Fragment {
         if(getArguments() != null){
             dogUuid = DetailFragmentArgs.fromBundle(getArguments()).getDogUuid();
         }
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        viewModel.fetch();
+        observe();
+
+    }
+
+    private void observe() {
+
+        viewModel.dogs.observe(this, dogBreed -> {
+            dogName.setText(dogBreed.dogBreed);
+            dogPurpose.setText(dogBreed.bredFor);
+            dogTemperament.setText(dogBreed.temperament);
+            dogLifeSpan.setText(dogBreed.lifeSpan);
+
+        });
+
+
+
+
     }
 }
