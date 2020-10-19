@@ -10,7 +10,7 @@ public class DogBreed {
     @SerializedName("name")
     public String dogBreed;
 
-    @SerializedName("liefe_span")
+    @SerializedName("life_span")
     public String lifeSpan;
 
     @SerializedName("breed_group")

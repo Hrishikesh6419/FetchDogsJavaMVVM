@@ -1,5 +1,6 @@
 package com.hrishikeshdarshan.fetchdogsjavamvvm.view;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
         TextView lifespan = holder.itemView.findViewById(R.id.lifespan);
 
         name.setText(dogsList.get(position).dogBreed);
+        Log.d("DogListAdapter", "onBindViewHolder: " + dogsList.get(position).lifeSpan);
         lifespan.setText(dogsList.get(position).lifeSpan);
 
 
