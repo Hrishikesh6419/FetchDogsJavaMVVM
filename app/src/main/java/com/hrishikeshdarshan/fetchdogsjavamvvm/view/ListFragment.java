@@ -35,7 +35,7 @@ import static com.hrishikeshdarshan.fetchdogsjavamvvm.view.ListFragmentDirection
 public class ListFragment extends Fragment {
 
     private ListViewModel viewModel;
-    private DogListAdapter dogListAdapter = new DogListAdapter(new ArrayList<>());
+    private DogListAdapter dogListAdapter;
 
     @BindView(R.id.dogsList)
     RecyclerView dogsList;
@@ -60,6 +60,7 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        dogListAdapter = new DogListAdapter(new ArrayList<>(), view.getContext());
         ButterKnife.bind(this,view);
         return view;
     }
@@ -75,6 +76,14 @@ public class ListFragment extends Fragment {
 
         dogsList.setLayoutManager(new LinearLayoutManager(getContext()));
         dogsList.setAdapter(dogListAdapter);
+
+        refreshLayout.setOnRefreshListener(() -> {
+            dogsList.setVisibility(View.GONE);
+            listError.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
+            viewModel.refreshByPassCache();
+            refreshLayout.setRefreshing(false);
+        });
 
         observeViewModel();
     }

@@ -1,18 +1,26 @@
 package com.hrishikeshdarshan.fetchdogsjavamvvm.view;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hrishikeshdarshan.fetchdogsjavamvvm.R;
+import com.hrishikeshdarshan.fetchdogsjavamvvm.databinding.FragmentDetailBinding;
+import com.hrishikeshdarshan.fetchdogsjavamvvm.model.DogBreed;
+import com.hrishikeshdarshan.fetchdogsjavamvvm.util.Util;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.viewmodel.DetailViewModel;
 
 
@@ -23,15 +31,8 @@ public class DetailFragment extends Fragment {
 
     private int dogUuid;
     DetailViewModel viewModel;
+    FragmentDetailBinding binding;
 
-    @BindView(R.id.dogName)
-    TextView dogName;
-    @BindView(R.id.dogPurpose)
-    TextView dogPurpose;
-    @BindView(R.id.dogTemperament)
-    TextView dogTemperament;
-    @BindView(R.id.dogLifeSpan)
-    TextView dogLifeSpan;
 
 
 
@@ -43,9 +44,9 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        ButterKnife.bind(this,view);
-        return view;
+       binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
+
+        return binding.getRoot();
     }
 
     @Override
@@ -55,19 +56,20 @@ public class DetailFragment extends Fragment {
             dogUuid = DetailFragmentArgs.fromBundle(getArguments()).getDogUuid();
         }
         viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
-        viewModel.fetch();
+        viewModel.fetch(dogUuid);
         observe();
 
     }
 
     private void observe() {
 
-        viewModel.dogs.observe(this, dogBreed -> {
-            dogName.setText(dogBreed.dogBreed);
-            dogPurpose.setText(dogBreed.bredFor);
-            dogTemperament.setText(dogBreed.temperament);
-            dogLifeSpan.setText(dogBreed.lifeSpan);
+        viewModel.dogs.observe(this, new Observer<DogBreed>() {
+            @Override
+            public void onChanged(DogBreed dogBreed) {
 
+                binding.setDog(dogBreed);
+
+            }
         });
 
 
