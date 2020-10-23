@@ -2,6 +2,7 @@ package com.hrishikeshdarshan.fetchdogsjavamvvm.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.hrishikeshdarshan.fetchdogsjavamvvm.model.DogApiService;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.model.DogBreed;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.model.DogDao;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.model.DogDatabase;
+import com.hrishikeshdarshan.fetchdogsjavamvvm.util.NotificationsHelper;
 import com.hrishikeshdarshan.fetchdogsjavamvvm.util.SharedPreferencesHelper;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
-
+        checkCacheDuration();
         long updateTime = prefHelper.getUpdateTime();
         long currentTime = System.nanoTime();
 
@@ -57,6 +59,19 @@ public class ListViewModel extends AndroidViewModel {
 
     public void refreshByPassCache(){
         fetchFromRemote();
+    }
+
+    private void checkCacheDuration(){
+        String cachePreference = prefHelper.getCachedDuration();
+
+        if(!cachePreference.equals("")){
+            try {
+                int cachePrefInt = Integer.parseInt(cachePreference);
+                refreshTime = cachePrefInt * 1000 * 1000 * 1000L;
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void fetchFromDatabase(){
@@ -81,6 +96,8 @@ public class ListViewModel extends AndroidViewModel {
                                 insertTask.execute(dogBreeds);
                                 Toast.makeText(getApplication(),
                                         "Dogs retrieved from endpoint", Toast.LENGTH_SHORT).show();
+                                NotificationsHelper.getInstance(getApplication()).createNotification();
+
                             }
 
                             @Override
